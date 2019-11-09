@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, useState, useEffect } from 'react'
+import { Switch, Route } from 'react-router-dom';
+import NaviBar from './components/NaviBar';
+import HomePage from './pages/HomePage';
+import Main from './pages/Main'
+import './App.css'
+import { useHistory } from 'react-router-dom'
 
-function App() {
+export default function App() {
+  const [user, setUser] = useState({ name: localStorage.getItem('user') })
+  const [search, setSearch] = useState('')
+  const history = useHistory()
+
+  const handleSearch = e => {
+    e.preventDefault()
+    history.push('/main/'+search)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <NaviBar user={user} setSearch={setSearch} handleSearch={handleSearch} />
+      <Switch>
+        <Route path="/" exact render={() => <HomePage user={user} setUser={setUser} />} />
+        <Route path='/main' render={() => <Main user={user} />} />
+      </Switch>
     </div>
-  );
+  )
 }
-
-export default App;
